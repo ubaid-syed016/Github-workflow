@@ -1,0 +1,36 @@
+name: Build and Test
+
+on:
+  workflow_call:
+    inputs:
+      language:
+        required: true
+        type: string
+      build_command:
+        required: true
+        type: string
+      test_command:
+        required: true
+        type: string
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Language
+        run: |
+          if [ "${{ inputs.language }}" == "python" ]; then
+            python3 -m venv venv
+            source venv/bin/activate
+          elif [ "${{ inputs.language }}" == "node" ]; then
+            echo "Node setup will go here"
+          fi
+
+      - name: Build
+        run: ${{ inputs.build_command }}
+
+      - name: Test
+        run: ${{ inputs.test_command }}
+
